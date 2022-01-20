@@ -71,12 +71,13 @@ func main() {
 		letters := strings.Split(word, "")
 		checkHorizontal(letters, jumble)
 		checkVertical(letters, jumble)
-		checkDiagonal(letters, jumble)
+		checkDiagonalForwardDown(letters, jumble)
+		checkDiagonalForwardUp(letters, jumble)
 	}
 }
 
 func checkHorizontal(word []string, grid [20][15]string) {
-	for y := 0; y < len(grid[0]); y++ {
+	for y := 0; y < len(grid); y++ {
 		for x := 0; x < len(grid[y]) - len(word) + 1; x++ {
 			if grid[y][x] == word[0] {
 				searchPattern := grid[y][x:x+len(word)]
@@ -105,7 +106,32 @@ func checkVertical(word []string, grid [20][15]string) {
 	}
 }
 
-func checkDiagonal(word []string, grid [20][15]string) {
+func checkDiagonalForwardDown(word []string, grid [20][15]string) {
+	for x := 0; x < len(grid[0]); x++ {
+		for y := 0; y < len(grid) - len(word) + 1; y++ {
+			if grid[y][x] == word[0] {
+				x1 := x
+				y1 := y
+				searchPattern := []string{}
+				for x1 < len(grid[y]) && y1 < len(grid) {
+					searchPattern = append(searchPattern, grid[y1][x1])
+					x1 += 1
+					y1 += 1
+
+					if len(searchPattern) == len(word) {
+						break
+					}
+				}
+
+				if isStrArrayEqual(word, searchPattern) {
+					fmt.Printf("found diagonal word %s at x: %d y: %d\n", word, x, y)
+				}
+			}
+		}
+	}
+}
+
+func checkDiagonalForwardUp(word []string, grid [20][15]string) {
 	for x := 0; x < len(grid[0]); x++ {
 		for y := 0; y < len(grid) - len(word) + 1; y++ {
 			if grid[y][x] == word[0] {
